@@ -28,12 +28,12 @@ namespace JWETestApplication.Utils
         {
             if (src == null)
             {
-                return default(V);
+                return default;
             }
 
             object value;
 
-            return src.TryGetValue(key, out value) ? (V)value : default(V);
+            return src.TryGetValue(key, out value) ? (V)value : default;
         }
 
         /// <summary>

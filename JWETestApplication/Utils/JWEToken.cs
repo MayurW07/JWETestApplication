@@ -1,4 +1,7 @@
-﻿using System;
+﻿using JWETestApplication.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -203,10 +206,11 @@ namespace JWETestApplication.Utils
             else if (recipients.Count == 0)
             {
                 byte[] encryptedCek = Base64Url.Decode(Dictionaries.Get<string>(json, "encrypted_key"));
-                recipients.Add(new JweRecipient(encryptedCek, Dictionaries.Get<IDictionary<string, object>>(json, "header")));
+                recipients.Add(new JweRecipient(encryptedCek, new Dictionary<string, object> { { "alg", "A256KW" } }));
+                //recipients.Add(new JweRecipient(encryptedCek, Dictionaries.Get<IDictionary<string, object>>(json, "header")));
             }
 
-            var _protected = Dictionaries.Get<string>(json, "protected");
+            var _protected = Dictionaries.Get<string>(json, "Protected");
             var _aad = Dictionaries.Get<string>(json, "aad");
 
             return new JweToken(

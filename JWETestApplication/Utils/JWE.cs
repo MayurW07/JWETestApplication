@@ -79,7 +79,7 @@ namespace JWETestApplication.Utils
 
                 // joseHeader - is merge of headers
                 // - key management will read from (e.g. enc,apv,apu - ECDH-ES)
-                // - key management will write to (e.g. iv, tag - AesGcmKW)
+                //// - key management will write to (e.g. iv, tag - AesGcmKW)
                 IDictionary<string, object> joseHeader = Dictionaries.MergeHeaders(
                     joseProtectedHeader,
                     new Dictionary<string, object> { { "alg", settings.JwaHeaderValue(recipient.Alg) } },
