@@ -61,15 +61,20 @@ namespace JWETestApplication.Utils
                 throw new JoseException(string.Format("Unsupported JWE enc requested: {0}", enc));
             }
 
-            IDictionary<string, object> joseProtectedHeader = Dictionaries.MergeHeaders(
-                new Dictionary<string, object> { { "enc", settings.JweHeaderValue(enc) } },
-                extraProtectedHeaders);
+            //IDictionary<string, object> joseProtectedHeader = Dictionaries.MergeHeaders(
+            //    new Dictionary<string, object> { { "enc", settings.JweHeaderValue(enc) } },
+            //    extraProtectedHeaders);
+            IDictionary<string, object> joseProtectedHeader = Dictionaries.MergeHeaders();
 
             byte[] cek = null;
 
             var recipientsOut = new List<JweRecipient>();
             foreach (var recipient in recipients)
             {
+                joseProtectedHeader = Dictionaries.MergeHeaders(
+                new Dictionary<string, object> { { "alg", settings.JwaHeaderValue(recipient.Alg) } },
+                 new Dictionary<string, object> { { "enc", settings.JweHeaderValue(enc) } }, extraProtectedHeaders);
+
                 IKeyManagement keys = settings.Jwa(recipient.Alg);
 
                 if (keys == null)
@@ -82,8 +87,7 @@ namespace JWETestApplication.Utils
                 //// - key management will write to (e.g. iv, tag - AesGcmKW)
                 IDictionary<string, object> joseHeader = Dictionaries.MergeHeaders(
                     joseProtectedHeader,
-                    //new Dictionary<string, object> { { "alg", settings.JwaHeaderValue(recipient.Alg) } },
-                   // recipient.Header,
+                    recipient.Header,
                     unprotectedHeaders
                     );
 
@@ -201,7 +205,6 @@ namespace JWETestApplication.Utils
 
             foreach (var recipient in token.Recipients)
             {
-                recipient.JoseHeader["alg"] = "A256KW";
                var headerAlg = settings.JwaAlgorithmFromHeader((string)recipient.JoseHeader["alg"]);
                 var encryptedCek = recipient.EncryptedCek;
 

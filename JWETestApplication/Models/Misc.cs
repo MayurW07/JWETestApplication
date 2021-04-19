@@ -35,7 +35,7 @@ namespace JWETestApplication.Models
         public CustDetails custDetails { get; set; }
     }
 
-    public class PanBasedDeailsReq
+    public class PanBasedDetailsReq
     {
         public ReqHdr reqHdr { get; set; }
         public ReqBody reqBody { get; set; }
@@ -43,7 +43,7 @@ namespace JWETestApplication.Models
 
     public class CustomerDetailRequestModel
     {
-        public PanBasedDeailsReq panBasedDeailsReq { get; set; }
+        public PanBasedDetailsReq panBasedDetailsReq { get; set; }
     }
 
 
