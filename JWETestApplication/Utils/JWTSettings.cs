@@ -131,13 +131,14 @@ namespace JWETestApplication.Utils
 
         private Dictionary<string, JweCompression> compressionAlgorithmsAliases = new Dictionary<string, JweCompression>();
 
-//#if NET40 || NET461
-//        private IJsonMapper jsMapper = new JSSerializerMapper();                
-//#elif NETSTANDARD
-//        private IJsonMapper jsMapper = new NewtonsoftMapper();
-//#endif
-        private IJsonMapper jsMapper =  new JSSerializerMapper(); 
+        //#if NET40 || NET461
+        //        private IJsonMapper jsMapper = new JSSerializerMapper();                
+        //#elif NETSTANDARD
+        //        private IJsonMapper jsMapper = new NewtonsoftMapper();
+        //#endif
+        // private IJsonMapper jsMapper =  new JSSerializerMapper(); 
 
+        private IJsonMapper jsMapper = new NewtonsoftMapper();
         //Builder-style methods
         public JwtSettings RegisterJwa(JweAlgorithm alg, IKeyManagement impl)
         {

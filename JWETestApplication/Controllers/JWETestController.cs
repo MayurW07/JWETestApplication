@@ -10,6 +10,7 @@ using JWETestApplication.Models;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Jose;
 
 namespace JWETestApplication.Controllers
 {
@@ -17,26 +18,23 @@ namespace JWETestApplication.Controllers
     [ApiController]
     public class JWETestController : ControllerBase
     {
-        private static byte[] aes256KWKey1 = Encoding.ASCII.GetBytes("BECEDE9F047E88314D6A9347B90E2BEC");
-        private static JweRecipient recipientAes256KW1 => new JweRecipient(JweAlgorithm.A256KW, aes256KWKey1,null);
+        private static byte[] aes256KWKey1 = HexStringToByteArray("BECEDE9F047E88314D6A9347B90E2BECF2AF3805F5DCE0DC2DA33713884A1D9A");
+        private static Utils.JweRecipient recipientAes256KW1 => new Utils.JweRecipient(Utils.JweAlgorithm.A256KW, aes256KWKey1,null);
         JSSerializerMapper JSSerializerMapper = new JSSerializerMapper();
-
+        NewtonsoftMapper mapper = new NewtonsoftMapper(); 
 
         [Route("Encrypt"),HttpPost]
         public JObject Encrypt_ModeCompactWithEmptyBytesA128KW_A128CBC_HS256_ExpectedResults([FromBody] CustomerDetailRequestModel Model)
         {
-            var json = JSSerializerMapper.Serialize(Model);
+            var json = mapper.Serialize(Model);
             byte[] plaintext = Encoding.ASCII.GetBytes(json);
 
-            var jwe = JWE.EncryptBytes(
+            var jwe = Utils.JWE.EncryptBytes(
                 plaintext: plaintext,
-                recipients: new JweRecipient[] { recipientAes256KW1 },
-                JweEncryption.A128CBC_HS256,
-                mode: SerializationMode.Json
+                recipients: new Utils.JweRecipient[] { recipientAes256KW1 },
+                Utils.JweEncryption.A128CBC_HS256,
+                mode: Utils.SerializationMode.Json
             );
-
-            JweToken jwedec = JWE.Decrypt(jwe, aes256KWKey1);
-            var response = JSSerializerMapper.Serialize(jwedec.Plaintext);
             JObject deserialized = JObject.Parse(jwe);
 
             return deserialized;
@@ -45,15 +43,24 @@ namespace JWETestApplication.Controllers
         [Route("Decrypt"),HttpPost]
         public JObject Decrypt([FromBody]JWEResponse Model)
         {
-            var jwe = JSSerializerMapper.Serialize(Model);
-            JweToken jwedec = JWE.Decrypt(jwe, aes256KWKey1);
-            var response = JSSerializerMapper.Serialize(jwedec.Plaintext);
+            var jwe = mapper.Serialize(Model);
+            Utils.JweToken jwedec = Utils.JWE.Decrypt(jwe, aes256KWKey1);           
+            var response = mapper.Serialize(jwedec.Plaintext);
             dynamic json = JsonConvert.DeserializeObject(response);
             JObject deserialized = JObject.Parse(json);
             return deserialized;
         }
 
-       
+        public static byte[] HexStringToByteArray(string s)
+        {
+            int len = s.Length;
+            byte[] data = new byte[len / 2];
+            for (int i = 0; i < len; i += 2)
+            {
+                data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
+            }
+            return data;
+        }
 
     }
 }

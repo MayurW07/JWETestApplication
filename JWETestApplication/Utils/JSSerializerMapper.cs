@@ -1,3 +1,4 @@
+using Jose;
 using Newtonsoft.Json;
 namespace JWETestApplication.Utils
 {

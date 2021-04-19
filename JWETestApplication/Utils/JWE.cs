@@ -82,8 +82,8 @@ namespace JWETestApplication.Utils
                 //// - key management will write to (e.g. iv, tag - AesGcmKW)
                 IDictionary<string, object> joseHeader = Dictionaries.MergeHeaders(
                     joseProtectedHeader,
-                    new Dictionary<string, object> { { "alg", settings.JwaHeaderValue(recipient.Alg) } },
-                    recipient.Header,
+                    //new Dictionary<string, object> { { "alg", settings.JwaHeaderValue(recipient.Alg) } },
+                   // recipient.Header,
                     unprotectedHeaders
                     );
 
@@ -154,7 +154,7 @@ namespace JWETestApplication.Utils
                         var protectedHeaderBytes = Encoding.UTF8.GetBytes(settings.JsonMapper.Serialize(joseProtectedHeader));
                         byte[] asciiEncodedProtectedHeader = Encoding.ASCII.GetBytes(Base64Url.Encode(protectedHeaderBytes));
                         byte[][] encParts = _enc.Encrypt(Aad(protectedHeaderBytes, aad), plaintext, cek);
-
+                        
                         return new JweToken(
                                     protectedHeaderBytes,
                                     unprotectedHeaders,
@@ -201,7 +201,8 @@ namespace JWETestApplication.Utils
 
             foreach (var recipient in token.Recipients)
             {
-                var headerAlg = settings.JwaAlgorithmFromHeader((string)recipient.JoseHeader["alg"]);
+                recipient.JoseHeader["alg"] = "A256KW";
+               var headerAlg = settings.JwaAlgorithmFromHeader((string)recipient.JoseHeader["alg"]);
                 var encryptedCek = recipient.EncryptedCek;
 
                 // skip recipient if asked to do strict validation

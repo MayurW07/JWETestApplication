@@ -1,4 +1,5 @@
-﻿using JWETestApplication.Models;
+﻿using Jose;
+using JWETestApplication.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -44,29 +45,44 @@ namespace JWETestApplication.Utils
             }
 
 
-            if (Recipients.Count == 1)
+            var recipientList = new List<object>();
+            foreach (var recipient in Recipients)
             {
-                json["header"] = Recipients[0].Header;
-                json["encrypted_key"] = Base64Url.Encode(Recipients[0].EncryptedCek);
-            }
-            else
-            {
-                var recipientList = new List<object>();
-
-
-                foreach (var recipient in Recipients)
-                {
-                    recipientList.Add(
-                        new Dictionary<string, object> {
-                            { "header", recipient.Header },
+                recipientList.Add(
+                    new Dictionary<string, object> {
+                            //{ "header", recipient.Header },
                             { "encrypted_key", Base64Url.Encode(recipient.EncryptedCek) }
-                        }
-                    );
-                }
-
-                json["recipients"] = recipientList;
+                    }
+                );
             }
 
+            json["recipients"] = recipientList;
+
+
+            #region commecnted actual code and added same patch as per modification response
+            //if (Recipients.Count == 1)
+            //{
+            //    json["header"] = Recipients[0].Header;
+            //    json["encrypted_key"] = Base64Url.Encode(Recipients[0].EncryptedCek);
+            //}
+            //else
+            //{
+            //    var recipientList = new List<object>();
+
+
+            //    foreach (var recipient in Recipients)
+            //    {
+            //        recipientList.Add(
+            //            new Dictionary<string, object> {
+            //                //{ "header", recipient.Header },
+            //                { "encrypted_key", Base64Url.Encode(recipient.EncryptedCek) }
+            //            }
+            //        );
+            //    }
+
+            //    json["recipients"] = recipientList;
+            //}
+            #endregion
             return mapper.Serialize(json);
         }
 
@@ -210,7 +226,7 @@ namespace JWETestApplication.Utils
                 //recipients.Add(new JweRecipient(encryptedCek, Dictionaries.Get<IDictionary<string, object>>(json, "header")));
             }
 
-            var _protected = Dictionaries.Get<string>(json, "Protected");
+            var _protected = Dictionaries.Get<string>(json, "protected");
             var _aad = Dictionaries.Get<string>(json, "aad");
 
             return new JweToken(

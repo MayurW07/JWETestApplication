@@ -47,19 +47,34 @@ namespace JWETestApplication.Models
     }
 
 
-    public class JWEResponse
+    public class Recipient
     {
-        public string ciphertext { get; set; }
-        public string Protected { get; set; }
-        public string iv { get; set; }
-        public string tag { get; set; }
-        public Header header { get; set; }
         public string encrypted_key { get; set; }
     }
 
-    public class Header
+    public class JWEResponse
     {
-        public string alg { get; set; }
+        public string ciphertext { get; set; }
+        public string @protected { get; set; }
+        public string iv { get; set; }
+        public string tag { get; set; }
+        public List<Recipient> recipients { get; set; }
     }
+
+
+    //public class JWEResponse
+    //{
+    //    public string ciphertext { get; set; }
+    //    public string Protected { get; set; }
+    //    public string iv { get; set; }
+    //    public string tag { get; set; }
+    //    public Header header { get; set; }
+    //    public string encrypted_key { get; set; }
+    //}
+
+    //public class Header
+    //{
+    //    public string alg { get; set; }
+    //}
 
 }

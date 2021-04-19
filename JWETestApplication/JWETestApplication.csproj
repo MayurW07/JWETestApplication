@@ -6,10 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utils\AESKeyWarpManagement.cs" />
+    <Compile Remove="Utils\AesKeyWrap.cs" />
+    <Compile Remove="Utils\IJsonMapper.cs" />
+    <Compile Remove="Utils\IKeyManagement.cs" />
+    <Compile Remove="Utils\NestedDictionariesConverter.cs" />
+    <Compile Remove="Utils\NewtonsoftMapper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="jose-jwt" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
@@ -17,9 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="jose-jwt-net46">
-      <HintPath>E:\ChromeDownloads\jose-jwt-master\jose-jwt\bin\Debug\jose-jwt-net46.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>E:\Workspace\Published\UAT\API\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
